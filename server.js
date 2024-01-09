@@ -29,10 +29,15 @@ app.get('/getUsers', (req, res) => {
 })
 
 app.post('/addUser', (req, res) => {
-    console.log(req.body)
 
     userModel.create(req.body)
     res.send('done')
+})
+
+app.delete('/deleteUser/:id',async (req,res)=> {
+    console.log(req.params.id)
+    const response =  await userModel.deleteOne({_id: req.params.id})
+    res.send(response)
 })
 
 app.get('/',(req, res) => {

@@ -26,12 +26,15 @@ const displayTable = (tabledata) => {
         const deleteBtn = document.createElement('td')
 
         console.log(rawData['_id'])
-        deleteBtn.innerHTML = `<button type='button' class='bg-gray-500' onclick="deleteItem(${rawData})">delete</button>`;
+        deleteBtn.innerHTML = `<button type='button' class='bg-gray-500' onclick="deleteItem('${rawData['_id']}')">delete</button>`;
         row.appendChild(deleteBtn)
         myTableBody.appendChild(row)
     })
 }
 
-const deleteItem = (id) => {
-    console.log('hello')
+const deleteItem = async (id) => {
+    const response = await fetch(`http://localhost:3000/deleteUser/${id}`, {
+        method: 'DELETE',
+    })
+    console.log(response)
 }
