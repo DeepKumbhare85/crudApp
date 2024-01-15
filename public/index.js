@@ -14,27 +14,60 @@ fetchUserData()
 
 const displayTable = (tabledata) => {
     const myTableBody = document.querySelector('.table-body')
+    let tableHtml = ``;
     tabledata.forEach(rawData => {
-        console.log(rawData)
-        const row = document.createElement('tr')
-
-        for (const key of headerData) {
-            const cell = document.createElement('td')
-            cell.textContent = rawData[key]
-            row.appendChild(cell)
-        }
-        const deleteBtn = document.createElement('td')
-
-        console.log(rawData['_id'])
-        deleteBtn.innerHTML = `<button type='button' class='bg-gray-500' onclick="deleteItem('${rawData['_id']}')">delete</button>`;
-        row.appendChild(deleteBtn)
-        myTableBody.appendChild(row)
+        
+        tableHtml += `
+            <tr>
+                <td>${rawData['_id']}</td>
+                <td>${rawData['name']}</td>
+                <td>${rawData['age']}</td>
+                <td> 
+                    <button type='button' class='bg-gray-500' onclick="deleteItem('${rawData['_id']}')">delete</button>
+                    <button type='button' class='bg-red-500' onclick="updateItem(this)">Update</button>
+                </td>
+            </tr>
+        `
     })
+
+    myTableBody.innerHTML = tableHtml
 }
 
 const deleteItem = async (id) => {
-    const response = await fetch(`http://localhost:3000/deleteUser/${id}`, {
-        method: 'DELETE',
+    if(confirm('Are you sure you want to delete')){ 
+        const response = await fetch(`http://localhost:3000/deleteUser/${id}`, {
+            method: 'DELETE',
+        })
+
+        fetchUserData()
+    }
+    else{
+        alert('You cancelled delete operation')
+    }
+}
+
+const handleSubmit = async () => {
+
+    const username = document.querySelector('#user')
+    const age = document.querySelector('#age')
+
+    const response = await fetch('http://localhost:3000/addUser', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: username.value,
+            age: age.value
+        })
     })
-    console.log(response)
+}
+
+const updateItem = async (button) => {
+
+    const rowIndex = button.parentNode.parentNode.rowIndex
+    
+    const myTable = document.querySelector('.user-table')
+    console.log(myTable.rows[rowIndex].cells[1].innerHTML)
+
 }

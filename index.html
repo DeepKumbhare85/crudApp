@@ -8,7 +8,30 @@
 </head>
 <body>
     <h1 class="text-3xl">Crud app</h1>
-    <table class="table-auto user-table">
+
+    <div class="max-w-md mx-auto bg-white rounded-md p-8 shadow-md">
+      <h2 class="text-2xl font-semibold mb-4">User Information</h2>
+
+      <form action="/addUser" method="POST">
+        <!-- User Field -->
+        <div class="mb-4">
+          <label for="user" class="block text-sm font-medium text-gray-600">User</label>
+          <input type="text" id="name" name="name" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <!-- Age Field -->
+        <div class="mb-6">
+          <label for="age" class="block text-sm font-medium text-gray-600">Age</label>
+          <input type="number" id="age" name="age" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <input type="hidden" value="-1" id="rowIndex">
+        <!-- Submit Button -->
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Submit</button>
+      </form>
+    </div>
+
+    <table class="min-w-full bg-white border border-gray-300 table-auto user-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -19,7 +42,10 @@
         </thead>
         <tbody class="table-body">
         </tbody>
-      </table>
-      <script src="index.js"></script>
+    </table>
+
+   
+  </div>
+    <script src="index.js"></script>
 </body>
 </html>
