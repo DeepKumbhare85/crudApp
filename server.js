@@ -38,8 +38,10 @@ app.get('/getUsers', (req, res) => {
 
 
 // Edit user
-app.put('/editUser/:id', (req, res) => {
-    
+app.put('/editUser/:id', async (req, res) => {
+    const response = await userModel.findByIdAndUpdate(req.params.id, req.body, { new:true })
+
+    res.send(response)
 })
 
 
@@ -51,7 +53,7 @@ app.post('/addUser', (req, res) => {
 
 // delete user
 app.delete('/deleteUser/:id',async (req,res)=> {
-    console.log(req.params.id)
+
     const response =  await userModel.deleteOne({_id: req.params.id})
     res.send(JSON.stringify(response))
 })

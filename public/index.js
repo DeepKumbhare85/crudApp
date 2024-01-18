@@ -1,12 +1,19 @@
 
 let userData
+let idToUpdate
+const updateDialog = document.querySelector('#update-dialog');
+const updatedName = document.querySelector('#updated-name');
+const updatedAge = document.querySelector('#updated-age');
+const updateForm = document.querySelector('#update-form');
+const cancelBtn = document.querySelector('#cancel-btn');
+
 const headerData = ['_id', 'name', 'age']
+
 const fetchUserData = async () => {
     const response = await fetch('http://localhost:3000/getusers')
     userData = await response.json()
 
     displayTable(userData)
-    console.log(userData)
 }
 
 fetchUserData()
@@ -23,8 +30,8 @@ const displayTable = (tabledata) => {
                 <td>${rawData['name']}</td>
                 <td>${rawData['age']}</td>
                 <td> 
-                    <button type='button' class='bg-gray-500' onclick="deleteItem('${rawData['_id']}')">delete</button>
-                    <button type='button' class='bg-red-500' onclick="updateItem(this)">Update</button>
+                    <button type='button' class='bg-gray-500 rounded px-4' onclick="deleteItem('${rawData['_id']}')">Delete</button>
+                    <button type='button' class='bg-red-500 rounded px-4' onclick="updateItem(this)">Update</button>
                 </td>
             </tr>
         `
@@ -34,7 +41,7 @@ const displayTable = (tabledata) => {
 }
 
 const deleteItem = async (id) => {
-    if(confirm('Are you sure you want to delete')){ 
+    if(confirm('Are you sure to delete?')){ 
         const response = await fetch(`http://localhost:3000/deleteUser/${id}`, {
             method: 'DELETE',
         })
@@ -68,6 +75,32 @@ const updateItem = async (button) => {
     const rowIndex = button.parentNode.parentNode.rowIndex
     
     const myTable = document.querySelector('.user-table')
-    console.log(myTable.rows[rowIndex].cells[1].innerHTML)
+    idToUpdate = myTable.rows[rowIndex].cells[0].innerHTML
+    updatedName.value = myTable.rows[rowIndex].cells[1].innerHTML
+    updatedAge.value = myTable.rows[rowIndex].cells[2].innerHTML
+
+    updateDialog.showModal();
 
 }
+
+updateForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const response = await fetch('http://localhost:3000/editUser/' + idToUpdate, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: updatedName.value,
+            age: updatedAge.value
+        })
+    })
+
+    updateDialog.close()
+    fetchUserData()
+});
+
+cancelBtn.addEventListener("click", function () {
+    updateDialog.close();
+  });
